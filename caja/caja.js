@@ -1,4 +1,5 @@
 import {fmt,esc,stockTotal,sumItems,login,logout,demo,read,mutate,isDemo} from '../assets/github.js';
+import {tieneCosto,calcularVenta} from '../assets/finanzas.js';
 const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
 let database=null,selected=null,cart=[],busy=false,currentSale=null,receiptCanvas=null,tab='vender';
 function notice(message,error=false){const x=$('#status');x.textContent=message;x.className='notice'+(error?' error':'');setTimeout(()=>{if(x.textContent===message)x.classList.add('hidden')},7000)}
@@ -47,9 +48,19 @@ $('#confirm').addEventListener('click',async()=>{
   const prior=db.sales.find(s=>s.id===saleId);if(prior)return prior;
   for(const item of items){const p=db.products.find(p=>p.sku===item.sku&&p.active!==false);if(!p)throw Error('Producto no disponible: '+item.sku);
     if(!Number.isSafeInteger(item.qty)||item.qty<1||Number(p.stock?.[item.size]||0)<item.qty)throw Error('Existencias insuficientes para '+item.sku+' talla '+item.size);if(Number(p.price)!==item.unitPrice)throw Error('Cambió el precio de '+item.sku+'. Actualiza y vuelve a agregar la prenda.');
+    if(!tieneCosto(p.cost))throw Error('Falta el precio de costo de '+item.sku+'. Regístralo en Administrador antes de vender.');
+    item.unitCost=Number(p.cost);
   }
   const sale={id:saleId,number:Number(db.nextReceipt||1),createdAt:new Date().toISOString(),status:'registrada',items,subtotal,discount,delivery,total:subtotal-discount+delivery,customer:$('#customer').value.trim().slice(0,100),payment:$('#payment').value,note:$('#note').value.trim().slice(0,250)};
-  for(const item of items){const p=db.products.find(p=>p.sku===item.sku);p.stock[item.size]-=item.qty;db.movements.push({date:sale.createdAt,type:'Venta',sku:item.sku,detail:`Recibo ${sale.number} · Talla ${item.size} · -${item.qty}`})}
+  const calculo=calcularVenta(sale);
+   for(const [index,item] of items.entries()){
+    const p=db.products.find(p=>p.sku===item.sku);p.stock[item.size]-=item.qty;
+    const linea=calculo.lines[index];
+    db.movements.push({date:sale.createdAt,type:'Venta',saleId,size:item.size,qty:item.qty,
+      sku:item.sku,unitPrice:item.unitPrice,unitCost:item.unitCost,
+      profit:linea.profit,tithe:linea.tithe,
+      detail:`Recibo ${sale.number} · Talla ${item.size} · -${item.qty}`});
+   }
   db.sales.push(sale);db.nextReceipt=sale.number+1;return sale;
  },`Venta LuSam: ${saleId}`);
  database=doc;cart=[];$('#discount').value=0;$('#delivery').value=0;$('#customer').value='';$('#note').value='';render();notice('Venta confirmada y descontada del inventario.');await openReceipt(result);
