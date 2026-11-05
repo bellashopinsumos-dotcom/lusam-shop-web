@@ -25,7 +25,23 @@ async function saveOnline(doc,sha,message){
   method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,content:utf8ToBase64(JSON.stringify(doc,null,2)+'\n'),sha,branch:'main'})
  });
 }
-async function getDemo(){let raw=localStorage.getItem(DEMO_KEY);if(raw)return JSON.parse(raw);const res=await fetch('../assets/demo.json');if(!res.ok)throw Error('No se encontró el demo');const doc=await res.json();localStorage.setItem(DEMO_KEY,JSON.stringify(doc));return doc}
+async function getDemo(){
+ const res=await fetch('../assets/demo.json',{cache:'no-store'});
+ if(!res.ok)throw Error('No se encontró el demo');
+ const plantilla=await res.json();
+ const raw=localStorage.getItem(DEMO_KEY);
+ if(!raw){localStorage.setItem(DEMO_KEY,JSON.stringify(plantilla));return plantilla}
+ const doc=JSON.parse(raw);
+ // Conserva las pruebas anteriores pero incorpora costos de EJEMPLO donde antes no existían.
+ const ejemplos=new Map((plantilla.products||[]).map(p=>[p.sku,p]));
+ for(const p of (doc.products||[])){
+   if(!Object.prototype.hasOwnProperty.call(p,'cost')){
+     p.cost=ejemplos.get(p.sku)?.cost??null;
+   }
+ }
+ localStorage.setItem(DEMO_KEY,JSON.stringify(doc));
+ return doc;
+}
 async function login(t){token=t.trim();mode='online';try{const result=await readOnline();return result.doc}catch(e){token='';mode='none';throw e}}
 async function demo(){mode='demo';token='';return getDemo()}
 function logout(){token='';mode='none'}
