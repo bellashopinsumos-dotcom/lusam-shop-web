@@ -71,3 +71,65 @@ $('#product-form').addEventListener('submit',async e=>{
   database=result.doc;$('#editor').close();render();notify('Producto guardado. GitHub publicará el catálogo cuando termine la acción automática.');
  }catch(err){formMsg(err.message,true)}finally{busy=false;$('#save-product').disabled=false}
 });
+
+const fechaHoy=hoyLocal(),mesActual=fechaHoy.slice(0,7);
+$('#finance-month').value=mesActual;
+$('#finance-half').value=Number(fechaHoy.slice(8))<=15?'1':'2';
+$('#finance-start').value=mesActual+'-01';
+$('#finance-end').value=fechaHoy;
+for(const id of ['finance-mode','finance-month','finance-half','finance-start','finance-end']){
+ $('#'+id).addEventListener('change',()=>{actualizarControlesFinanzas();renderFinanzas()});
+}
+function actualizarControlesFinanzas(){
+ const tipo=$('#finance-mode').value;
+ $('#finance-month-wrap').classList.toggle('hidden',tipo==='todos'||tipo==='personalizado');
+ $('#finance-half-wrap').classList.toggle('hidden',tipo!=='quincena');
+ $('#finance-start-wrap').classList.toggle('hidden',tipo!=='personalizado');
+ $('#finance-end-wrap').classList.toggle('hidden',tipo!=='personalizado');
+}
+function reporteActual(){
+ const rango=rangoFinanzas($('#finance-mode').value,$('#finance-month').value,$('#finance-half').value,$('#finance-start').value,$('#finance-end').value);
+ return {rango,lista:ventasPeriodo(database?.sales||[],rango)};
+}
+function renderFinanzas(){
+ if(!database)return;
+ const {rango,lista}=reporteActual();
+ $('#finance-period-label').textContent=rango.invalid?'Revisa el intervalo de fechas.':rango.label;
+ const resumen=resumenFinanzas(lista), incompleto=resumen.pendiente>0;
+ $('#finance-stats').innerHTML=[
+  ['Ventas registradas',String(resumen.cantidad)],
+  ['Ingresos netos por prendas',fmt(resumen.ingresos)],
+  ['Costo de mercancía vendida',fmt(resumen.costos)+(incompleto?'*':'')],
+  ['Ganancia bruta',fmt(resumen.ganancia)+(incompleto?'*':'')],
+  ['Diezmo acumulado (10 %)',fmt(resumen.diezmo)+(incompleto?'*':'')],
+  ['Ganancia después del diezmo',fmt(resumen.despuesDiezmo)+(incompleto?'*':'')]
+ ].map(([label,value])=>`<div class="stat"><small>${esc(label)}</small><strong>${esc(value)}</strong></div>`).join('');
+ $('#finance-sales-count').textContent=resumen.cantidad+' ventas en el período';
+ const aviso=$('#finance-warning');
+ aviso.classList.toggle('hidden',!incompleto);
+ aviso.textContent=incompleto?resumen.pendiente+' venta(s) tienen costos pendientes. Los importes con * solo incluyen ventas con todos sus costos registrados. Completa los precios de costo ANTES de realizar las ventas para calcularlos correctamente.':'';
+ const filas=resumen.calculadas.flatMap(({venta,calculo})=>calculo.lines.map(linea=>({venta,linea})));
+ $('#finance-detail').innerHTML=filas.length?`<table class="table"><thead><tr>
+ <th>Fecha</th><th>Recibo</th><th>Referencia</th><th>Prenda / talla</th><th>Unid.</th><th>Precio venta/unid.</th><th>Costo/unid.</th><th>Ingreso neto</th><th>Costo total</th><th>Ganancia</th><th>Diezmo</th><th>Ganancia final</th>
+ </tr></thead><tbody>${filas.map(({venta,linea})=>`<tr><td>${esc(new Date(venta.createdAt).toLocaleDateString('es-CO'))}</td><td>#${esc(String(venta.number).padStart(4,'0'))}</td><td>${esc(linea.sku)}</td><td>${esc(linea.name+' · '+linea.size)}</td><td>${linea.qty}</td><td>${fmt(linea.unitPrice)}</td><td>${linea.known?fmt(linea.unitCost):'Pendiente'}</td><td>${fmt(linea.revenue)}</td><td>${linea.known?fmt(linea.cost):'Pendiente'}</td><td>${linea.known?fmt(linea.profit):'Pendiente'}</td><td>${linea.known?fmt(linea.tithe):'Pendiente'}</td><td>${linea.known?fmt(linea.afterTithe):'Pendiente'}</td></tr>`).join('')}</tbody></table>`:'<p class="empty">No hay ventas registradas en este período.</p>';
+}
+function csvSafe(value){
+ let s=String(value??'');
+ if(/^[=+@\-\t\r]/.test(s))s="'"+s;
+ return '"'+s.replace(/"/g,'""')+'"';
+}
+$('#finance-csv').addEventListener('click',()=>{
+ if(!database)return;
+ const {rango,lista}=reporteActual();
+ if(rango.invalid){notify('Revisa el período antes de exportar',true);return}
+ const rows=[['Fecha','Recibo','Referencia','Prenda','Talla','Cantidad','Precio venta unitario','Precio costo unitario','Ingreso neto','Costo total','Ganancia','Diezmo 10%','Ganancia después del diezmo']];
+ for(const venta of lista)for(const linea of calcularVenta(venta).lines){
+  rows.push([hoyLocal(new Date(venta.createdAt)),venta.number,linea.sku,linea.name,linea.size,linea.qty,linea.unitPrice,linea.unitCost??'',linea.revenue,linea.cost??'',linea.profit??'',linea.tithe??'',linea.afterTithe??'']);
+ }
+ const resumen=resumenFinanzas(lista);
+ rows.push([]);rows.push(['TOTALES','','','','','','','',resumen.ingresos,resumen.pendiente?'Incompleto':resumen.costos,resumen.pendiente?'Incompleto':resumen.ganancia,resumen.pendiente?'Incompleto':resumen.diezmo,resumen.pendiente?'Incompleto':resumen.despuesDiezmo]);
+ const csv='\uFEFF'+rows.map(r=>r.map(csvSafe).join(';')).join('\r\n');
+ const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='LuSam_Ganancias_Diezmo_'+($('#finance-month').value||'reporte')+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
+});
+actualizarControlesFinanzas();
