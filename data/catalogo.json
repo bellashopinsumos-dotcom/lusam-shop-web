@@ -1,0 +1,236 @@
+{
+  "demo": true,
+  "publishedAt": "2026-11-05T00:00:00-05:00",
+  "items": [
+    {
+      "id": 1,
+      "sku": "LUS-001",
+      "name": "Vestido midi Aurora",
+      "category": "Vestidos",
+      "price": 89900,
+      "old": 109900,
+      "stock": {
+        "S": 6,
+        "M": 7,
+        "L": 6
+      },
+      "photo": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "Nuevo",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": true,
+      "color": "#c89790"
+    },
+    {
+      "id": 2,
+      "sku": "LUS-002",
+      "name": "Blazer Siena",
+      "category": "Chaquetas",
+      "price": 129900,
+      "old": 149900,
+      "stock": {
+        "S": 4,
+        "M": 5,
+        "L": 4
+      },
+      "photo": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "Favorito",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": true,
+      "color": "#b2937c"
+    },
+    {
+      "id": 3,
+      "sku": "LUS-003",
+      "name": "Top rib Alma",
+      "category": "Blusas",
+      "price": 45900,
+      "old": 55900,
+      "stock": {
+        "S": 3,
+        "M": 4,
+        "L": 3
+      },
+      "photo": "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": true,
+      "color": "#a28086"
+    },
+    {
+      "id": 4,
+      "sku": "LUS-004",
+      "name": "Jean wide leg Mila",
+      "category": "Pantalones",
+      "price": 99900,
+      "old": 119900,
+      "stock": {
+        "6": 7,
+        "8": 8,
+        "10": 7,
+        "12": 8
+      },
+      "photo": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": true,
+      "color": "#7699b0"
+    },
+    {
+      "id": 5,
+      "sku": "LUS-005",
+      "name": "Conjunto Roma",
+      "category": "Conjuntos",
+      "price": 149900,
+      "old": 179900,
+      "stock": {
+        "S": 6,
+        "M": 7,
+        "L": 6
+      },
+      "photo": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "Más vendido",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": false,
+      "color": "#b4a48a"
+    },
+    {
+      "id": 6,
+      "sku": "LUS-006",
+      "name": "Falda satín Olivia",
+      "category": "Faldas",
+      "price": 75900,
+      "old": 89900,
+      "stock": {
+        "S": 2,
+        "M": 3,
+        "L": 2
+      },
+      "photo": "https://images.unsplash.com/photo-1583496661160-fb5886a13d24?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": false,
+      "color": "#b78d93"
+    },
+    {
+      "id": 7,
+      "sku": "LUS-007",
+      "name": "Blusa romántica Emma",
+      "category": "Blusas",
+      "price": 64900,
+      "old": 79900,
+      "stock": {
+        "S": 5,
+        "M": 6,
+        "L": 5
+      },
+      "photo": "https://images.unsplash.com/photo-1551803091-e20673f15770?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "Nuevo",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": false,
+      "color": "#f0dfc7"
+    },
+    {
+      "id": 8,
+      "sku": "LUS-008",
+      "name": "Vestido corto Luna",
+      "category": "Vestidos",
+      "price": 94900,
+      "old": 114900,
+      "stock": {
+        "S": 5,
+        "M": 6,
+        "L": 5
+      },
+      "photo": "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": false,
+      "color": "#66505e"
+    },
+    {
+      "id": 9,
+      "sku": "LUS-009",
+      "name": "Pantalón sastre Zoe",
+      "category": "Pantalones",
+      "price": 109900,
+      "old": 129900,
+      "stock": {
+        "6": 8,
+        "8": 9,
+        "10": 8,
+        "12": 9
+      },
+      "photo": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": false,
+      "color": "#b2a194"
+    },
+    {
+      "id": 10,
+      "sku": "LUS-010",
+      "name": "Chaqueta denim Iris",
+      "category": "Chaquetas",
+      "price": 119900,
+      "old": 139900,
+      "stock": {
+        "S": 1,
+        "M": 2,
+        "L": 1
+      },
+      "photo": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": false,
+      "color": "#7d9fbb"
+    },
+    {
+      "id": 11,
+      "sku": "LUS-011",
+      "name": "Cardigan soft Mía",
+      "category": "Blusas",
+      "price": 82900,
+      "old": 99900,
+      "stock": {
+        "S": 3,
+        "M": 4,
+        "L": 3
+      },
+      "photo": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": false,
+      "color": "#d9a5a7"
+    },
+    {
+      "id": 12,
+      "sku": "LUS-012",
+      "name": "Set casual Valentina",
+      "category": "Conjuntos",
+      "price": 139900,
+      "old": 159900,
+      "stock": {
+        "S": 1,
+        "M": 0,
+        "L": 0
+      },
+      "photo": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=82&fit=crop&crop=entropy",
+      "tag": "Últimas unidades",
+      "description": "Prenda seleccionada para el catálogo femenino de LuSam Shop.",
+      "active": true,
+      "featured": false,
+      "color": "#c47f71"
+    }
+  ]
+}
